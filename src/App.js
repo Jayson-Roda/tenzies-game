@@ -20,7 +20,7 @@ function App() {
   const [minutes, setMinutes] = useState(0)
   const [player, setPlayer] = useState("")
   const [highestScore, setHighestScore] = useState(
-      JSON.parse(localStorage.getItem("highestScore")) || []
+      () => JSON.parse(localStorage.getItem("highestScore")) || []
     )
 
   function setPlayerName(value) {
@@ -39,14 +39,10 @@ function App() {
       setHighestScore([highest])   
     } else {
       if(highestScore[0].minutes > minutes){
-        setHighestScore(prevHighest => prevHighest.map(highScore => {
-          return highest
-        }))
+        setHighestScore([highest])
       } else if (highestScore[0].minutes === minutes) {
         if(highestScore[0].seconds > seconds){
-          setHighestScore(prevHighest => prevHighest.map(highScore => {
-            return highest
-          }))
+          setHighestScore([highest])
         }
       }
     }
@@ -65,8 +61,10 @@ function App() {
       gettingHighestScore()
       stopTimer()
     }
+    // eslint-disable-next-line
   }, [dice])
 
+  // eslint-disable-next-line
   useEffect(() => {
     if(seconds === 59){
       setMinutes(minutes + 1)
@@ -154,7 +152,7 @@ function App() {
         <>
           {tenzies && <Confetti />}
 
-          <Navbar highestScore={highestScore[0]}/>
+          <Navbar highestScore={highestScore}/>
 
           <h1 className="title">Tenzies</h1>
           
